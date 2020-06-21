@@ -13,4 +13,4 @@ RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 BuildType: Website
-WebsitePath: docs
+WebsitePath: C:/Users/User/Desktop/Taller-procesamiento-de-datos
