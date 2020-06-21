@@ -11,7 +11,7 @@
 
 
 
-<title>Procesamiento de datos con tidyverse</title>
+<title>Untitled</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -260,7 +260,7 @@ $(document).ready(function () {
 
 
 
-<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -290,68 +290,12 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Procesamiento de datos con tidyverse</h1>
+<h1 class="title toc-ignore">Untitled</h1>
 
 </div>
 
 
-<div id="parte-2" class="section level1">
-<h1><strong>Parte 2</strong></h1>
-<hr />
-<div id="retomando-la-parte-1" class="section level2">
-<h2><strong>Retomando la Parte 1</strong></h2>
-<pre class="r"><code>data_v14 &lt;- read.csv(&quot;data_exp_11854-v14_task-5ksx.csv&quot;)
-data_v15 &lt;- read.csv(&quot;data_exp_11854-v15_task-5ksx.csv&quot;)
-library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages ------------------------------------------------- tidyverse 1.3.0 --</code></pre>
-<pre><code>## v ggplot2 3.3.0     v purrr   0.3.4
-## v tibble  3.0.1     v dplyr   0.8.5
-## v tidyr   1.1.0     v stringr 1.4.0
-## v readr   1.3.1     v forcats 0.5.0</code></pre>
-<pre><code>## -- Conflicts ---------------------------------------------------- tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>data_raw &lt;- bind_rows(data_v14, data_v15) %&gt;% 
-  rename(&quot;id&quot; = Participant.Public.ID, &quot;group&quot; = randomiser.qg34, &quot;RT&quot; = Reaction.Time, &quot;Acc&quot; = Correct, &quot;relation&quot; = primeType, &quot;familiarity&quot; = trialType, &quot;block&quot; =   block_testingSR) %&gt;% 
-  filter (Screen.Name == &quot;target&quot;, display == &quot;Tarea&quot;) %&gt;% 
-  select (id, group, relation, familiarity, block, prime, target, Response, Acc, RT) %&gt;% 
-  arrange (group, id, familiarity, block, target) %&gt;% 
-  mutate (accRT = ifelse(Acc == 1, RT, NA))</code></pre>
-</div>
-<div id="participantes-outliers-por-accuracy" class="section level2">
-<h2><strong>Participantes outliers por accuracy</strong></h2>
-<pre class="r"><code>data_outliers &lt;- data_raw %&gt;%
-  filter (familiarity == &quot;familiar&quot;) %&gt;% 
-  group_by(id, group) %&gt;% 
-  summarise(meanAcc = mean(Acc)) %&gt;% 
-  filter(meanAcc &lt; 0.9)
-
-#Los elimino de mi base de datos
-data &lt;- data_raw %&gt;% 
-  filter(!(id %in% data_outliers$id) &amp; !(RT &lt; 200))</code></pre>
-</div>
-<div id="análisis-exploratorio" class="section level2">
-<h2><strong>Análisis exploratorio</strong></h2>
-<pre class="r"><code>data_condition &lt;- data %&gt;% 
-  group_by(group, familiarity, relation) %&gt;% 
-  summarise(meanAcc = mean(Acc), 
-            meanRT = mean(RT, na.rm = TRUE),
-            sd_RT = sd(RT))</code></pre>
-<p>Guardar cuestionario</p>
-<pre class="r"><code>library(xlsx)
-write.xlsx(data, file= &quot;PRIMINGdata.gorilla.xlsx&quot;)</code></pre>
-</div>
-<div id="bonus-track-cambio-de-tipo-de-base-de-datos" class="section level2">
-<h2><strong>Bonus track: cambio de tipo de base de datos</strong></h2>
-<p>Cambio el tipo de base de datos (de larga a ancha) con pivot_wider</p>
-<pre class="r"><code>data_wide &lt;- data %&gt;% 
-  select(id, Acc, target, prime, relation) %&gt;% 
-  pivot_wider(names_from = id, values_from = Acc)</code></pre>
-<p>Vuelvo a la forma anterior con pivot_longer</p>
-<pre class="r"><code>data_long &lt;- data_wide %&gt;% 
-  pivot_longer(cols = c(-target, -prime, -relation), names_to = &quot;id&quot;, values_to = &quot;Acc&quot;)</code></pre>
-</div>
-</div>
+<p>Index</p>
 
 
 
