@@ -1,0 +1,13 @@
+name: "my-website"
+navbar:
+  title: "Mini-taller"
+  left:
+    - text: "Parte 1"
+      href: Procesar_datos_GORILLA_1.html
+    - text: "Parte 2"
+      href: Procesar_datos_GORILLA_2.html
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+    css: styles.css

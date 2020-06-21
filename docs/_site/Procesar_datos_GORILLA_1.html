@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Procesamiento de datos con tidyverse</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Mini-taller</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="Procesar_datos_GORILLA_1.html">Parte 1</a>
+</li>
+<li>
+  <a href="Procesar_datos_GORILLA_2.html">Parte 2</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Procesamiento de datos con tidyverse</h1>
+
+</div>
+
+
+<div id="parte-1" class="section level1">
+<h1><strong>Parte 1</strong></h1>
+<hr />
+<div id="configuraciones-iniciales" class="section level2">
+<h2><strong>Configuraciones iniciales</strong></h2>
+<div id="paquetes" class="section level4">
+<h4><strong>Paquetes</strong></h4>
+<p>Primero instalo los paquetes que voy a necesitar. Esto lo vas a tener que hacer una única vez (no hace falta correrlo cada vez que corres el script). Es más prolijo si ponemos todos al principio aunque algunos paquetes los usemos más adelante. #<code>{r} install.packages("tidyverse") install.packages("xlsx") #</code></p>
+</div>
+<div id="directorio-de-trabajo" class="section level4">
+<h4><strong>Directorio de trabajo</strong></h4>
+<p>Luego vamos a setear el directorio de trabajo correspondiente. Acá poné la carpeta en la que hayas guardado los archivos que vamos a usar. Tené en cuenta que tenés que usar una barra hacia la derecha (“/”) o dos hacia la izquierda (“\”) para escribir el directorio. De lo contrario, te va a tirar error.</p>
+<p>#<code>{r} setwd("C:/Users/User/Desktop/Taller - Procesamiento de datos") #</code></p>
+<pre class="r"><code>knitr::opts_knit$set(&quot;C:/Users/User/Desktop/Taller-Procesamiento-de-datos&quot;)</code></pre>
+</div>
+</div>
+<div id="paso-1-leo-y-almaceno-la-base-de-datos" class="section level2">
+<h2><strong>Paso 1: Leo y almaceno la base de datos</strong></h2>
+<div id="descargar-desde-gorilla" class="section level4">
+<h4><strong>Descargar desde Gorilla</strong></h4>
+<p>Te recomiendo que descargues los archivos de gorilla en formato csv. Si son muchos datos el formato excel va a tardar y hasta puede tirar error. Para saber a qué tarea corresponde cada archivo tenés que tener en cuenta que cada uno está identificado por el código del experimento, la versión del mismo y el código de la tarea (alfanumérico de 4 caracteres). Como voy a analizar el priming, me fijo este código alfanumérico en la pantalla de diseño del experimento, como muestro acá abajo:</p>
+<p><img src="Archivos_gorilla.png" /></p>
+</div>
+<div id="ahora-sí-leo-y-almaceno" class="section level4">
+<h4><strong>Ahora sí, leo y almaceno</strong></h4>
+<p>Dado que hice dos versiones del experimento (versión 14 y 15) tengo dos bases de datos diferentes. Usando <code>read.csv</code> voy a leerlas. Además las voy a almacenar eligiendo un nombre para cada una y usando el operador de asignación <code>&lt;-</code></p>
+<pre class="r"><code>data_v14 &lt;- read.csv(&quot;data_exp_11854-v14_task-5ksx.csv&quot;)
+data_v15 &lt;- read.csv(&quot;data_exp_11854-v15_task-5ksx.csv&quot;)</code></pre>
+</div>
+</div>
+<div id="paso-2-unir-bases-de-datos" class="section level2">
+<h2><strong>Paso 2: Unir bases de datos</strong></h2>
+<p>Si bien tengo dos versiones del experimento, quiero tener todos los datos juntos en una única base de datos. Es por eso que vamos a unir las dos bases de datos una arriba de la otra dado que comparten las mismas variables (columnas). Esto se hace con <code>bind_rows</code>.</p>
+<pre class="r"><code>library(tidyverse)
+data_raw &lt;- bind_rows(data_v14, data_v15)</code></pre>
+<p>Acá no lo hago, pero si quisieras identificar a cada base de datos podés agregar dentro de <code>bind_rows</code> el argumento de <code>.id = "nombre de columna"</code>. Va a crear una nueva columna llamada “nombre de columna” y va a asignarle un <code>1</code> a las filas de la primera base (data_v14) y un <code>2</code> a las filas de la segunda (data_v15).</p>
+<p>Aclaración: si bien ya instalamos los paquetes y no es necesario instalarlos cada vez que iniciamos R, <strong>sí</strong> tenemos que cargarlos en nuestra libreria si los usamos. Es por eso que cada vez que abramos este script vamos a tener que correr la línea <code>library(tidiverse)</code>.</p>
+</div>
+<div id="paso-3-renombro-columas" class="section level2">
+<h2><strong>Paso 3: Renombro columas</strong></h2>
+<p>Los nombres de algunas de las variables (columnas) vienen predeterminados por Gorilla y no son muy intuitivos. Es por eso que me resulta cómodo cambiarlos y así poder identificar los datos de mejor forma. Esto lo podemos hacer de utilizando <code>rename</code> y asignando un nuevo nombre (que escribo primero y entre comillas) a cada una de las columnas a renombrar.</p>
+<pre class="r"><code>data_raw &lt;- rename(data_raw,&quot;id&quot; = Participant.Public.ID, &quot;group&quot; = randomiser.qg34, &quot;RT&quot; = Reaction.Time, &quot;Acc&quot; = Correct, &quot;relation&quot; = primeType, &quot;familiarity&quot; = trialType, &quot;block&quot; =    block_testingSR) </code></pre>
+</div>
+<div id="paso-4-filtro-filas" class="section level2">
+<h2><strong>Paso 4: Filtro filas</strong></h2>
+<p>Ahora bien, Gorilla nos da muchíiiiisima información acerca de cada participante y para analizar los datos es probable que no la necesitemos toda. Un primer paso para el filtrado de toda esta data es quedarme sólo con las filas que tienen información importante. Para esto uso la función <code>filter</code>, la cual extrae (y se queda con) las filas que cumplen con un criterio lógico (el cual nosotres vamos a especificar).</p>
+<p>En este caso, me interesan sólo las respuestas asociadas al <em>target</em> y eso lo determino quedándome sólo con aquellas filas en las que la variable <code>Screen.Name</code> sea <code>target</code>. Además, me quiero quedar sólo con las filas en las que la variable <code>display</code> sea <code>Tarea</code> para no analizar los datos que corresponden al demo inicial.</p>
+<pre class="r"><code>data_raw &lt;- filter (data_raw, Screen.Name == &quot;target&quot;, display == &quot;Tarea&quot;) </code></pre>
+<p>Fijate que todo esto se indica con el operador relacional <code>==</code> el cual chequea si cada elemento del primer vector es igual al segundo (no confundir con el operador <code>=</code> que se usa para asignar).</p>
+</div>
+<div id="paso-5-selecciono-columnas" class="section level2">
+<h2><strong>Paso 5: Selecciono columnas</strong></h2>
+<p>Otro paso importante para descartar información que no me interesa analizar es la selección de columnas. Para esto podemos usar <code>select</code> y especificar con cuáles queremos quedarnos. También podríamos aclarar con qué columnas <strong>no</strong> queremos quedarnos (es decir, cuáles queremos que se vayan) agregando un <code>-</code> antes de cada nombre.</p>
+<pre class="r"><code>data_raw &lt;- select (data_raw, id, group, relation, familiarity, block, prime, target, Response, Acc, RT) </code></pre>
+</div>
+<div id="bonus-track-i-ordeno-filas" class="section level2">
+<h2><strong>Bonus track I: Ordeno filas</strong></h2>
+<p>Si bien no es un paso esencial para el análisis de datos, a mí me gusta y ayuda a la visualización de los datos. Por eso agregué este primer bonus track en donde vamos a ordenar las filas Uso <code>arrange</code> para ordenar las filas.</p>
+<pre class="r"><code>data_raw &lt;- arrange (data_raw, group, id, familiarity, block, target)</code></pre>
+</div>
+<div id="bonus-track-ii-nuevas-columnas" class="section level2">
+<h2><strong>Bonus track II: Nuevas columnas</strong></h2>
+<p>Para analizar RTs: uso <code>mutate</code> para generar una nueva columna que tenga sólo los RTs en los que la rta fue correcta.</p>
+<pre class="r"><code>data_raw &lt;- mutate(data_raw, accRT = ifelse(Acc == 1, RT, NA))</code></pre>
+</div>
+<div id="resumen-y-conlusión" class="section level2">
+<h2><strong>Resumen y conlusión</strong></h2>
+<div id="todo-junto" class="section level3">
+<h3><strong>Todo junto!</strong></h3>
+<pre class="r"><code>data_raw &lt;- bind_rows(data_v14, data_v15) %&gt;% 
+  rename(&quot;id&quot; = Participant.Public.ID, &quot;group&quot; = randomiser.qg34, &quot;RT&quot; = Reaction.Time, &quot;Acc&quot; = Correct, &quot;relation&quot; = primeType, &quot;familiarity&quot; = trialType, &quot;block&quot; =   block_testingSR) %&gt;% 
+  filter (Screen.Name == &quot;target&quot;, display == &quot;Tarea&quot;) %&gt;% 
+  select (id, group, relation, familiarity, block, prime, target, Response, Acc, RT) %&gt;% 
+  arrange (group, id, familiarity, block, target) %&gt;% 
+  mutate (accRT = ifelse(Acc == 1, RT, NA))</code></pre>
+</div>
+<div id="chequeo" class="section level3">
+<h3><strong>Chequeo</strong></h3>
+<pre class="r"><code>trials_count &lt;- data_raw %&gt;% 
+  group_by(id) %&gt;% 
+  count()</code></pre>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
