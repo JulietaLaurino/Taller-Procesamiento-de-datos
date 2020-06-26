@@ -1,6 +1,20 @@
 ---
-title: "Untitled"
-
+title: "Procesamiento de datos con tidyverse en R"
+author: "Julieta Laurino"
+date: "26/06/2020"
 ---
 
-Index
+### El paquete **_tidyverse_**
+
+
+_Tidyverse_ no es un único paquete sino que es un conjunto de paquetes que tienen como función ordenar y procesar datos de manera ordenada (de ahí el nombre del paquete _**tidy**verse_). Cuando usemos _Tidyverse_, entonces, vamos a trabajar con datos ordenados. 
+
+Pero ¿qué son los **datos ordenados**? Cuando hablamos de datos ordenados o _tidy data_, estamos hablando de datos en tablas que cumplen ciertas condiciones: 
+
+* Cada variable es una columa;
+* Cada observación es una fila;
+* Cada valor tiene su propia celda;
+* Cada dataset a usar dentro de un mismo análisis está en su propia tabla.
+
+
+![](tidy-1.svg)

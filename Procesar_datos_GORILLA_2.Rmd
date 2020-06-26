@@ -1,13 +1,13 @@
 ---
-title: "Procesamiento de datos con tidyverse"
+title: "Procesamiento de datos con tidyverse en R"
+
 ---
 
 # **Parte 2**
 
 ---------------------------------------------------------------------------------
-## **Retomando la Parte 1**
 
-```{r}
+```{r echo=F, message=F, warning=F}
 data_v14 <- read.csv("data_exp_11854-v14_task-5ksx.csv")
 data_v15 <- read.csv("data_exp_11854-v15_task-5ksx.csv")
 library(tidyverse)
@@ -20,22 +20,34 @@ data_raw <- bind_rows(data_v14, data_v15) %>%
 ```
 
 
-## **Participantes outliers por accuracy**
+## **Criterio de inclusión por accuracy**
+Si vamos un poquito más allá del filtrado incial de la base datos, es probable que en algún momento necesites aplicar otros filtros utilizando criterios propios, es decir, aplicar algún criterio de inclusión. En esta tarea, voy a tomar como criterio de inclusión un buen desempeño en las palabras familiares. De lo contrario, considero que el participante podría no estar prestando atención. 
+
+Primero, voy a encadenar varias funciones que vimos en la Parte 1 para crear una base de datos que contenga a todos los participantes que quiero excluir. Fijate que la única función nueva que usamos es `summarise()` para que me muestre el promedio de la `Acc` de los datos que agrupé con `group_by`. Esta tabla va a contener, entonces, a aquellos participantes que presenten un promedio menor a 0.9 en las palabras familiares.
 ```{r}
-data_outliers <- data_raw %>%
+data_exclude <- data_raw %>%
   filter (familiarity == "familiar") %>% 
   group_by(id, group) %>% 
   summarise(meanAcc = mean(Acc)) %>% 
   filter(meanAcc < 0.9)
-
-#Los elimino de mi base de datos
-data <- data_raw %>% 
-  filter(!(id %in% data_outliers$id) & !(RT < 200))
+slice(data_exclude, 1:20)
 ```
 
+
+En segundo lugar, elimino a estos participantes de mi tabla original. Fijate que ahora la tabla pasó de llamarse `data_raw` (datos crudos) a simplemente `data`, porque ya hice la eliminación de participantes. Esto es algo que uso para diferenciar una tabla de otra. 
+
+```{r}
+data <- data_raw %>% 
+  filter(!(id %in% data_exclude$id) & !(RT < 200))
+```
+
+Otro detalle que añadí en este último filtro es eliminar los `RT` menores a 200 ms dado que son datos muy rápidos para ser válidos y es probable que sean simplemente errores. 
   
 
 ## **Análisis exploratorio**
+Finalmente, y para ir analizando algo de todo lo que ordené, vamos a hacer un análisis exploratorio que me permita tener una idea -a grandes rasgos- de si el experimento "me dio o no". 
+
+Generemos una nueva base de datos y pidamos el promedio de la `Acc` y el promedio de `RT` junto con su desvío estándar, para todas las combinaciones de condiciones (son tres variables: `group`, `familiarity` y `relation`). 
 
 ```{r}
 data_condition <- data %>% 
@@ -43,25 +55,31 @@ data_condition <- data %>%
   summarise(meanAcc = mean(Acc), 
             meanRT = mean(RT, na.rm = TRUE),
             sd_RT = sd(RT))
+slice(data_condition, 1:8)
 ```
 
-
-Guardar cuestionario
+## **Guardado**
+Después de tanto amasar los datos, llegó el momento de guardarlos. Para guardarlo como un archivo excel usamos el paquete `xlsx` que instalamos al principio de todo. Primero va el nombre de la tabla que quiero guardar como archivo de excel, y luego, el que quiero que tenga ese archivo. Pueden guardarse tablas en un mismo archivo y diferentes hojas usando los argumentos `sheetName = "nombre de la hoja"` y `append = TRUE`
 ```{r}
 library(xlsx)
 write.xlsx(data, file= "PRIMINGdata.gorilla.xlsx")
 ```
 
-## **Bonus track: cambio de tipo de base de datos**
-Cambio el tipo de base de datos (de larga a ancha) con pivot_wider 
+Por supuesto que también podría guardarse un archivo csv o bien podría no guardar nada y seguir con el análisis en este mismo script (que es lo que hago en general). 
 
+## **Bonus track: cambio de tipo de base de datos**
+Última función del día. Como comenté en la Parte 1, hay veces que los datos no vienen de forma _tidy_ y necesito transformarlos para hacer todas estas cosas divertidas que hicimos recién. También puede ocurrir que para algún análisis en particular necesite los datos de forma _no tidy_ con una columna por sujeto por ejemplo. 
+
+Empecemos por trasformar nuestros datos _tidy_ a una forma _no tidy_. Esto sería análogo a decir que paso de una tabla en disposición _longer_ (más larga) a una tabla en disposición _wider_ (más ancha). Entonces vamos a usar la función `pivot_wider()`. Si se imaginan la forma de las tablas en cada caso tiene sentido. Aclaro que ahora los nombres de mis columnas van a provenir de mi variable `id` (`names_from = id`) y que los valores que van a tomar esas columnas provienen de mi variable `Acc` (`values_from = Acc`):
 ```{r}
 data_wide <- data %>% 
   select(id, Acc, target, prime, relation) %>% 
   pivot_wider(names_from = id, values_from = Acc)
+slice(data_wide, 1:10)
 ```
+¿Vieron que es más ancha? Entonces tengo una columna por participante y una fila por palabra en cada condición. Ya no es más _tidy data_. 
 
-Vuelvo a la forma anterior con pivot_longer
+Pero si, en cambio, parto de data que no es _tidy_ y quiero que lo sea, podemos usar `pivot_longer()`. Nuevamente aclaro que los nombres de las columnas los ponga en una columna llamada `id` y los valores de las columnas los ponga en una columna llamada `Acc`. En este caso, agrego el argumento `cols` para que este intercambio lo haga con todas las columnas menos con las columnas de `target`, `prime` y `relation` (es decir, solo con las columnas que son nombres de participantes):
 
 ```{r}
 data_long <- data_wide %>% 
@@ -69,3 +87,8 @@ data_long <- data_wide %>%
 ```
 
 
+
+
+
+
+# FIN :)

@@ -11,7 +11,7 @@
 
 
 
-<title>Procesamiento de datos con tidyverse</title>
+<title>Procesamiento de datos con tidyverse en R</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -290,7 +290,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Procesamiento de datos con tidyverse</h1>
+<h1 class="title toc-ignore">Procesamiento de datos con tidyverse en R</h1>
 
 </div>
 
@@ -298,51 +298,110 @@ $(document).ready(function () {
 <div id="parte-2" class="section level1">
 <h1><strong>Parte 2</strong></h1>
 <hr />
-<div id="retomando-la-parte-1" class="section level2">
-<h2><strong>Retomando la Parte 1</strong></h2>
-<pre class="r"><code>data_v14 &lt;- read.csv(&quot;data_exp_11854-v14_task-5ksx.csv&quot;)
-data_v15 &lt;- read.csv(&quot;data_exp_11854-v15_task-5ksx.csv&quot;)
-library(tidyverse)
-data_raw &lt;- bind_rows(data_v14, data_v15) %&gt;% 
-  rename(&quot;id&quot; = Participant.Public.ID, &quot;group&quot; = randomiser.qg34, &quot;RT&quot; = Reaction.Time, &quot;Acc&quot; = Correct, &quot;relation&quot; = primeType, &quot;familiarity&quot; = trialType, &quot;block&quot; =   block_testingSR) %&gt;% 
-  filter (Screen.Name == &quot;target&quot;, display == &quot;Tarea&quot;) %&gt;% 
-  select (id, group, relation, familiarity, block, prime, target, Response, Acc, RT) %&gt;% 
-  arrange (group, id, familiarity, block, target) %&gt;% 
-  mutate (accRT = ifelse(Acc == 1, RT, NA))</code></pre>
-</div>
-<div id="participantes-outliers-por-accuracy" class="section level2">
-<h2><strong>Participantes outliers por accuracy</strong></h2>
-<pre class="r"><code>data_outliers &lt;- data_raw %&gt;%
+<div id="criterio-de-inclusión-por-accuracy" class="section level2">
+<h2><strong>Criterio de inclusión por accuracy</strong></h2>
+<p>Si vamos un poquito más allá del filtrado incial de la base datos, es probable que en algún momento necesites aplicar otros filtros utilizando criterios propios, es decir, aplicar algún criterio de inclusión. En esta tarea, voy a tomar como criterio de inclusión un buen desempeño en las palabras familiares. De lo contrario, considero que el participante podría no estar prestando atención.</p>
+<p>Primero, voy a encadenar varias funciones que vimos en la Parte 1 para crear una base de datos que contenga a todos los participantes que quiero excluir. Fijate que la única función nueva que usamos es <code>summarise()</code> para que me muestre el promedio de la <code>Acc</code> de los datos que agrupé con <code>group_by</code>. Esta tabla va a contener, entonces, a aquellos participantes que presenten un promedio menor a 0.9 en las palabras familiares.</p>
+<pre class="r"><code>data_exclude &lt;- data_raw %&gt;%
   filter (familiarity == &quot;familiar&quot;) %&gt;% 
   group_by(id, group) %&gt;% 
   summarise(meanAcc = mean(Acc)) %&gt;% 
   filter(meanAcc &lt; 0.9)
-
-#Los elimino de mi base de datos
-data &lt;- data_raw %&gt;% 
-  filter(!(id %in% data_outliers$id) &amp; !(RT &lt; 200))</code></pre>
+slice(data_exclude, 1:20)</code></pre>
+<pre><code>## # A tibble: 4 x 3
+## # Groups:   id [4]
+##   id                     group         meanAcc
+##   &lt;chr&gt;                  &lt;chr&gt;           &lt;dbl&gt;
+## 1 amparo calviÃ±o        No reactivado   0.883
+## 2 galo1991               Reactivado      0.825
+## 3 HernÃ¡n Ferragut       Reactivado      0.892
+## 4 Maria Esperanza Piloni Reactivado      0.883</code></pre>
+<p>En segundo lugar, elimino a estos participantes de mi tabla original. Fijate que ahora la tabla pasó de llamarse <code>data_raw</code> (datos crudos) a simplemente <code>data</code>, porque ya hice la eliminación de participantes. Esto es algo que uso para diferenciar una tabla de otra.</p>
+<pre class="r"><code>data &lt;- data_raw %&gt;% 
+  filter(!(id %in% data_exclude$id) &amp; !(RT &lt; 200))</code></pre>
+<p>Otro detalle que añadí en este último filtro es eliminar los <code>RT</code> menores a 200 ms dado que son datos muy rápidos para ser válidos y es probable que sean simplemente errores.</p>
 </div>
 <div id="análisis-exploratorio" class="section level2">
 <h2><strong>Análisis exploratorio</strong></h2>
+<p>Finalmente, y para ir analizando algo de todo lo que ordené, vamos a hacer un análisis exploratorio que me permita tener una idea -a grandes rasgos- de si el experimento “me dio o no”.</p>
+<p>Generemos una nueva base de datos y pidamos el promedio de la <code>Acc</code> y el promedio de <code>RT</code> junto con su desvío estándar, para todas las combinaciones de condiciones (son tres variables: <code>group</code>, <code>familiarity</code> y <code>relation</code>).</p>
 <pre class="r"><code>data_condition &lt;- data %&gt;% 
   group_by(group, familiarity, relation) %&gt;% 
   summarise(meanAcc = mean(Acc), 
             meanRT = mean(RT, na.rm = TRUE),
-            sd_RT = sd(RT))</code></pre>
-<p>Guardar cuestionario</p>
+            sd_RT = sd(RT))
+slice(data_condition, 1:8)</code></pre>
+<pre><code>## # A tibble: 8 x 6
+## # Groups:   group, familiarity [4]
+##   group         familiarity relation  meanAcc meanRT sd_RT
+##   &lt;chr&gt;         &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 No reactivado familiar    related     0.928   850.  323.
+## 2 No reactivado familiar    unrelated   0.957   895.  332.
+## 3 No reactivado new         related     0.735  1068.  390.
+## 4 No reactivado new         unrelated   0.853  1142.  402.
+## 5 Reactivado    familiar    related     0.925   843.  274.
+## 6 Reactivado    familiar    unrelated   0.963   887.  293.
+## 7 Reactivado    new         related     0.731  1045.  370.
+## 8 Reactivado    new         unrelated   0.856  1109.  375.</code></pre>
+</div>
+<div id="guardado" class="section level2">
+<h2><strong>Guardado</strong></h2>
+<p>Después de tanto amasar los datos, llegó el momento de guardarlos. Para guardarlo como un archivo excel usamos el paquete <code>xlsx</code> que instalamos al principio de todo. Primero va el nombre de la tabla que quiero guardar como archivo de excel, y luego, el que quiero que tenga ese archivo. Pueden guardarse tablas en un mismo archivo y diferentes hojas usando los argumentos <code>sheetName = "nombre de la hoja"</code> y <code>append = TRUE</code></p>
 <pre class="r"><code>library(xlsx)
 write.xlsx(data, file= &quot;PRIMINGdata.gorilla.xlsx&quot;)</code></pre>
+<p>Por supuesto que también podría guardarse un archivo csv o bien podría no guardar nada y seguir con el análisis en este mismo script (que es lo que hago en general).</p>
 </div>
 <div id="bonus-track-cambio-de-tipo-de-base-de-datos" class="section level2">
 <h2><strong>Bonus track: cambio de tipo de base de datos</strong></h2>
-<p>Cambio el tipo de base de datos (de larga a ancha) con pivot_wider</p>
+<p>Última función del día. Como comenté en la Parte 1, hay veces que los datos no vienen de forma <em>tidy</em> y necesito transformarlos para hacer todas estas cosas divertidas que hicimos recién. También puede ocurrir que para algún análisis en particular necesite los datos de forma <em>no tidy</em> con una columna por sujeto por ejemplo.</p>
+<p>Empecemos por trasformar nuestros datos <em>tidy</em> a una forma <em>no tidy</em>. Esto sería análogo a decir que paso de una tabla en disposición <em>longer</em> (más larga) a una tabla en disposición <em>wider</em> (más ancha). Entonces vamos a usar la función <code>pivot_wider()</code>. Si se imaginan la forma de las tablas en cada caso tiene sentido. Aclaro que ahora los nombres de mis columnas van a provenir de mi variable <code>id</code> (<code>names_from = id</code>) y que los valores que van a tomar esas columnas provienen de mi variable <code>Acc</code> (<code>values_from = Acc</code>):</p>
 <pre class="r"><code>data_wide &lt;- data %&gt;% 
   select(id, Acc, target, prime, relation) %&gt;% 
-  pivot_wider(names_from = id, values_from = Acc)</code></pre>
-<p>Vuelvo a la forma anterior con pivot_longer</p>
+  pivot_wider(names_from = id, values_from = Acc)
+slice(data_wide, 1:10)</code></pre>
+<pre><code>## # A tibble: 10 x 69
+##    target prime relation `Agustina Carpi~ `AndrÃ©s Santos` `Ariana Luppino`
+##    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;               &lt;int&gt;            &lt;int&gt;            &lt;int&gt;
+##  1 ARDIL~ clavo unrelat~                1                1                1
+##  2 ARDIL~ nuec~ related                 0                1                1
+##  3 BAÃ‘E~ golpe unrelat~                1                1                1
+##  4 BAÃ‘E~ ducha related                 1                1                1
+##  5 CABAL~ jine~ related                 1                1                1
+##  6 CABAL~ telÃ~ unrelat~                1                1                1
+##  7 CALAB~ pant~ unrelat~                1                1                1
+##  8 CALAB~ verd~ related                 1                1                1
+##  9 COLCH~ desc~ related                 1                1                1
+## 10 COLCH~ gale~ unrelat~                1                1                1
+## # ... with 63 more variables: `Camila Lumani` &lt;int&gt;, `Camila Sanchez` &lt;int&gt;,
+## #   Carlos &lt;int&gt;, `Carolina Franco` &lt;int&gt;, `Clara Sanchez` &lt;int&gt;, `Cristina
+## #   Rosales` &lt;int&gt;, `DamiÃ¡n Andrada` &lt;int&gt;, `Estefania Miguel` &lt;int&gt;,
+## #   `Federica Benaglia` &lt;int&gt;, `Gabriela altamirano` &lt;int&gt;, `Juliana
+## #   Jackson` &lt;int&gt;, lautarog9 &lt;int&gt;, `Llanca Andreoli` &lt;int&gt;, `Maia
+## #   Scigliano` &lt;int&gt;, `MarÃ­a Sol Di Gennaro` &lt;int&gt;, Marcos &lt;int&gt;, `Maria
+## #   Florencia Molina` &lt;int&gt;, `Marianella Ferrero` &lt;int&gt;, MarianoSappia &lt;int&gt;,
+## #   `Mario Ramos` &lt;int&gt;, martinabarella &lt;int&gt;, `Melanie paparielo` &lt;int&gt;,
+## #   `Rodrigo Perello` &lt;int&gt;, samanthaMoreno &lt;int&gt;, `Santiago Colina` &lt;int&gt;,
+## #   silvanaanaliaromero &lt;int&gt;, `Stefania Sandri` &lt;int&gt;, `41224648` &lt;int&gt;,
+## #   `Agostina Rosales` &lt;int&gt;, AgustinaValdenegro &lt;int&gt;, `Andrea Moratti` &lt;int&gt;,
+## #   camirgonzalez &lt;int&gt;, candelaria &lt;int&gt;, `candelariacarreÃ±o` &lt;int&gt;,
+## #   `Carolina Jankowicz` &lt;int&gt;, China &lt;int&gt;, `Ezequiel Sak` &lt;int&gt;, `Fabian
+## #   Andrioli` &lt;int&gt;, `Flor Carzon` &lt;int&gt;, florflor &lt;int&gt;, `Gabriel
+## #   AlabÃ­` &lt;int&gt;, `Gabriela Andrea Ayala` &lt;int&gt;, `Ian Fraga` &lt;int&gt;, `Juan
+## #   Francisco Giop` &lt;int&gt;, `Junge Nela` &lt;int&gt;, `Lagos Ruben` &lt;int&gt;, `Laila
+## #   Delgado` &lt;int&gt;, `Lucas Somacal` &lt;int&gt;, `Magali Silva` &lt;int&gt;, `Manuela
+## #   Typek` &lt;int&gt;, `MarÃ­a BelÃ©n Otrera` &lt;int&gt;, `MarÃ­a SofÃ­a Sappia` &lt;int&gt;,
+## #   `Maria Sol Gamba` &lt;int&gt;, `Maria Victoria Quintana` &lt;int&gt;, `Martin
+## #   Elvira` &lt;int&gt;, `Nicol Chaipul` &lt;int&gt;, `Nicolas Dvoskin` &lt;int&gt;, `Paula
+## #   Rey` &lt;int&gt;, `RocÃ­o Cruz Lamas` &lt;int&gt;, `Sabrina Micheli` &lt;int&gt;, `Sherley
+## #   Farromeque` &lt;int&gt;, `Valeria Montero` &lt;int&gt;, `Zoe Foglia` &lt;int&gt;</code></pre>
+<p>¿Vieron que es más ancha? Entonces tengo una columna por participante y una fila por palabra en cada condición. Ya no es más <em>tidy data</em>.</p>
+<p>Pero si, en cambio, parto de data que no es <em>tidy</em> y quiero que lo sea, podemos usar <code>pivot_longer()</code>. Nuevamente aclaro que los nombres de las columnas los ponga en una columna llamada <code>id</code> y los valores de las columnas los ponga en una columna llamada <code>Acc</code>. En este caso, agrego el argumento <code>cols</code> para que este intercambio lo haga con todas las columnas menos con las columnas de <code>target</code>, <code>prime</code> y <code>relation</code> (es decir, solo con las columnas que son nombres de participantes):</p>
 <pre class="r"><code>data_long &lt;- data_wide %&gt;% 
   pivot_longer(cols = c(-target, -prime, -relation), names_to = &quot;id&quot;, values_to = &quot;Acc&quot;)</code></pre>
 </div>
+</div>
+<div id="fin" class="section level1">
+<h1>FIN :)</h1>
 </div>
 
 
