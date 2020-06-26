@@ -3,10 +3,7 @@ title: "Procesamiento de datos con tidyverse en R"
 
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set("C:/Users/User/Desktop/Taller-Procesamiento-de-datos")
-```
+
 
 # **Parte 1** 
 
