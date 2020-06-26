@@ -1,3 +1,4 @@
+
 # Parte 1 -----------------------------------------------------------------
 
 ## **Configuraciones iniciales**  
@@ -18,11 +19,10 @@ data_v15 <- read.csv("data_exp_11854-v15_task-5ksx.csv")
 data_raw <- bind_rows(data_v14, data_v15)
 
 ## **Paso 3: Renombro columas**
-data_raw <- rename(data_raw,"id" = Participant.Public.ID, "group" = randomiser.qg34, "RT" = Reaction.Time, "Acc" = Correct, "relation" = primeType, "familiarity" = trialType, "block" = 	block_testingSR) 
+data_raw <- rename (data_raw,"id" = Participant.Public.ID, "group" = randomiser.qg34, "RT" = Reaction.Time, "Acc" = Correct, "relation" = primeType, "familiarity" = trialType, "block" = 	block_testingSR) 
 
 ## **Paso 4: Filtro filas** 
 data_raw <- filter (data_raw, Screen.Name == "target", display == "Tarea") 
-
 
 ## **Paso 5: Selecciono columnas**
 data_raw <- select (data_raw, id, group, relation, familiarity, block, prime, target, Response, Acc, RT) 
@@ -31,7 +31,7 @@ data_raw <- select (data_raw, id, group, relation, familiarity, block, prime, ta
 data_raw <- arrange (data_raw, group, id, familiarity, block, target)
 
 ## **Bonus track II: Nuevas columnas** 
-data_raw <- mutate(data_raw, accRT = ifelse(Acc == 1, RT, NA))
+data_raw <- mutate (data_raw, accRT = ifelse(Acc == 1, RT, NA))
 
 slice(data_raw, 1:10)
 
@@ -60,7 +60,7 @@ data_exclude <- data_raw %>%
   filter (familiarity == "familiar") %>% 
   group_by(id, group) %>% 
   summarise(meanAcc = mean(Acc)) %>% 
-  filter(meanAcc < 0.9)
+  filter(meanAcc < 0.95)
 
 slice(data_exclude, 1:20)
 
@@ -78,7 +78,8 @@ slice(data_condition, 1:8)
 
 ## **Guardado**
 library(xlsx)
-write.xlsx(data, file= "PRIMINGdata.gorilla.xlsx")
+write.xlsx(data, file= "PRIMINGdata.gorilla.xlsx", sheetName = "sheet1")
+write.xlsx(data, file= "PRIMINGdata.gorilla.xlsx", append = T, sheetName = "sheet2")
 
 ## **Bonus track: cambio de tipo de base de datos**
 # Pivot wider

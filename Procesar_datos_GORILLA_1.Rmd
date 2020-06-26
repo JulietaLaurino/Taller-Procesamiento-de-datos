@@ -1,5 +1,5 @@
 ---
-title: "Procesamiento de datos con tidyverse"
+title: "Procesamiento de datos con tidyverse en R"
 
 ---
 
@@ -113,7 +113,7 @@ data_raw <- mutate(data_raw, accRT = ifelse(Acc == 1, RT, NA))
 slice(data_raw, 1:10)
 ```
 
-## **Resumen y conlusión**
+## **Resumen y conclusión**
 ### **Todo junto!**
 Podemos hacer todos los pasos anteriores es un único y gran paso usando la pipa (o pipe) ` %>% `. Lo que estamos indicando cada vez que la usamos es que el argumento que se encuentra a la derecha de la pipa se alimente del que se encuentra a la izquierda. Este operador es muy útil para correr una secuencia de operaciones como muestro a continuación:
 ```{r}
