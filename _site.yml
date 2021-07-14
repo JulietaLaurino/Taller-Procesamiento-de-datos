@@ -4,9 +4,9 @@ navbar:
   title: "Mini-taller"
   left:
     - text: "Parte 1"
-      href: Procesar_datos_GORILLA_1.html
+      href: Parte1_Limpiando-los-datos.html
     - text: "Parte 2"
-      href: Procesar_datos_GORILLA_2.html
+      href: Parte2_Analizando-los-datos.html
 output:
   html_document:
     theme: cosmo

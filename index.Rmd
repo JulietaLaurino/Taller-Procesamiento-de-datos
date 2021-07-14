@@ -1,9 +1,14 @@
 ---
 title: "Procesamiento de datos con tidyverse en R"
+subtitle: "Este taller es una adaptación del tutorial 'From Gorilla to Tidy Data' de Emma James, disponible en: https://emljames.github.io/GorillaR/index.html"
 author: "Julieta Laurino"
 date: "26/06/2020"
+
 ---
 
+-----------
+#
+#
 ### El paquete **_tidyverse_**
 
 
@@ -17,4 +22,4 @@ Pero ¿qué son los **datos ordenados**? Cuando hablamos de datos ordenados o _t
 * Cada dataset a usar dentro de un mismo análisis está en su propia tabla.
 
 
-![](tidy-1.svg)
+![](images/tidy-1.svg)
