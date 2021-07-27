@@ -238,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Mini-taller</a>
+      <a class="navbar-brand" href="index.html">Inicio</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -333,28 +333,17 @@ data_v15 &lt;- read.csv(&quot;data/data_exp_11854-v15_task-5ksx.csv&quot;)</code
                    accRT = ifelse(Acc == 1, RT, NA))
 
 tail(data_raw, n = 10) #Muestra las últimas 10 filas </code></pre>
-<pre><code>##            id group  relation familiarity    prime  target Acc       RT
-## 16791 1481615 react   related         new    plato  TINELO   1  962.840
-## 16792 1481615 react unrelated         new  tornado  TINELO   1  766.140
-## 16793 1481615 react   related         new  tenedor  TINELO   1  888.275
-## 16794 1481615 react unrelated         new   violín  TINELO   1 1320.240
-## 16795 1481615 react unrelated         new  tumulto ZORCICO   0 1071.655
-## 16796 1481615 react   related         new    canto ZORCICO   0 1283.520
-## 16797 1481615 react   related         new    danza ZORCICO   1 1104.970
-## 16798 1481615 react unrelated         new   lluvia ZORCICO   1 1911.205
-## 16799 1481615 react unrelated         new    tallo ZORCICO   1  629.695
-## 16800 1481615 react   related         new flamenco ZORCICO   0 1303.865
-##          accRT
-## 16791  962.840
-## 16792  766.140
-## 16793  888.275
-## 16794 1320.240
-## 16795       NA
-## 16796       NA
-## 16797 1104.970
-## 16798 1911.205
-## 16799  629.695
-## 16800       NA</code></pre>
+<pre><code>##            id group  relation familiarity    prime  target Acc       RT    accRT
+## 16791 1481615 react   related         new    plato  TINELO   1  962.840  962.840
+## 16792 1481615 react unrelated         new  tornado  TINELO   1  766.140  766.140
+## 16793 1481615 react   related         new  tenedor  TINELO   1  888.275  888.275
+## 16794 1481615 react unrelated         new   violín  TINELO   1 1320.240 1320.240
+## 16795 1481615 react unrelated         new  tumulto ZORCICO   0 1071.655       NA
+## 16796 1481615 react   related         new    canto ZORCICO   0 1283.520       NA
+## 16797 1481615 react   related         new    danza ZORCICO   1 1104.970 1104.970
+## 16798 1481615 react unrelated         new   lluvia ZORCICO   1 1911.205 1911.205
+## 16799 1481615 react unrelated         new    tallo ZORCICO   1  629.695  629.695
+## 16800 1481615 react   related         new flamenco ZORCICO   0 1303.865       NA</code></pre>
 </div>
 <div id="resumen-y-conclusión" class="section level2">
 <h2><strong>Resumen y conclusión</strong></h2>
@@ -395,7 +384,7 @@ head(trials_count, n = 10) #Muestra las primeras 10 filas</code></pre>
 ##  8 1395086   240
 ##  9 1395109   240
 ## 10 1395211   240</code></pre>
-<p>Y ya tenemos nuestra tidy data super tidy :) Pero podemos seguir un poquito más…</p>
+<p>Y ya tenemos nuestra tidy data super tidy :) Pero podemos seguir un poquito más.</p>
 </div>
 </div>
 

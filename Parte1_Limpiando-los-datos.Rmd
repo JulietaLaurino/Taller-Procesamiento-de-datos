@@ -94,7 +94,7 @@ data_raw <- arrange(data_raw,
 ## **Bonus track II: Nuevas columnas** 
 Otro paso muchas veces útil es generar una nueva columna. Esta nueva columna podría resultar de una operación tomando como input una o más columnas existentes, o simplemente tener un valor determinado. En cualquiera de los casos, vamos a utilizar la función `mutate()`. En el ejemplo que doy acá abajo, quiero generar una nueva columna denominada "accRT" que incluya sólo los RTs en los que la respuesta fue correcta. Sin entrar en detalles, esto lo puedo hacer utilizando `ifelse` que va a ir fila por fila evaluando lo que le indico. Acá estoy indicando: "si el valor de la columna `Acc` es `1`, entonces el valor que toma la nueva columna `accRT` es el mismo que el de la columna `RT`. De lo contrario, el valor que toma es `NA`". 
 
-```{r}
+```{r, R.options = list(width = 90)}
 data_raw <- mutate(data_raw, 
                    accRT = ifelse(Acc == 1, RT, NA))
 
@@ -129,4 +129,4 @@ trials_count <- data_raw %>%
 head(trials_count, n = 10) #Muestra las primeras 10 filas
 ```
 
-Y ya tenemos nuestra tidy data super tidy :) Pero podemos seguir un poquito más...
+Y ya tenemos nuestra tidy data super tidy :) Pero podemos seguir un poquito más.

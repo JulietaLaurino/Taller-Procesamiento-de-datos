@@ -238,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Mini-taller</a>
+      <a class="navbar-brand" href="index.html">Inicio</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -329,8 +329,8 @@ head(data_condition)</code></pre>
   select(id, Acc, target, prime, relation) %&gt;% 
   pivot_wider(names_from = id, values_from = Acc)
 
-head(data_wide)</code></pre>
-<pre><code>## # A tibble: 6 x 69
+head(data_wide[,1:8])</code></pre>
+<pre><code>## # A tibble: 6 x 8
 ##   target  prime    relation  `1394643` `1394726` `1395058` `1395064` `1395109`
 ##   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
 ## 1 ARDILLA nueces   related           1         1         1         1         1
@@ -338,27 +338,14 @@ head(data_wide)</code></pre>
 ## 3 ARDILLA cuchilla unrelated         1         1         1         1         1
 ## 4 ARDILLA bosque   related           1         1         1         1         1
 ## 5 ARDILLA árbol    related           0         1         1         1         0
-## 6 ARDILLA jabón    unrelated         1         1         1         1         1
-## # ... with 61 more variables: 1395211 &lt;int&gt;, 1395305 &lt;int&gt;, 1395364 &lt;int&gt;,
-## #   1395775 &lt;int&gt;, 1395832 &lt;int&gt;, 1395991 &lt;int&gt;, 1396065 &lt;int&gt;, 1396131 &lt;int&gt;,
-## #   1399038 &lt;int&gt;, 1400720 &lt;int&gt;, 1407336 &lt;int&gt;, 1413106 &lt;int&gt;, 1421992 &lt;int&gt;,
-## #   1422100 &lt;int&gt;, 1422436 &lt;int&gt;, 1426963 &lt;int&gt;, 1433435 &lt;int&gt;, 1437322 &lt;int&gt;,
-## #   1467001 &lt;int&gt;, 1467238 &lt;int&gt;, 1467355 &lt;int&gt;, 1467535 &lt;int&gt;, 1471465 &lt;int&gt;,
-## #   1475583 &lt;int&gt;, 1481301 &lt;int&gt;, 1394650 &lt;int&gt;, 1394870 &lt;int&gt;, 1395071 &lt;int&gt;,
-## #   1395866 &lt;int&gt;, 1396252 &lt;int&gt;, 1396689 &lt;int&gt;, 1401553 &lt;int&gt;, 1413192 &lt;int&gt;,
-## #   1413939 &lt;int&gt;, 1414063 &lt;int&gt;, 1422081 &lt;int&gt;, 1422091 &lt;int&gt;, 1422813 &lt;int&gt;,
-## #   1422874 &lt;int&gt;, 1426551 &lt;int&gt;, 1433128 &lt;int&gt;, 1433249 &lt;int&gt;, 1466403 &lt;int&gt;,
-## #   1466888 &lt;int&gt;, 1466985 &lt;int&gt;, 1467029 &lt;int&gt;, 1467099 &lt;int&gt;, 1467222 &lt;int&gt;,
-## #   1467411 &lt;int&gt;, 1467432 &lt;int&gt;, 1467727 &lt;int&gt;, 1467921 &lt;int&gt;, 1468058 &lt;int&gt;,
-## #   1468102 &lt;int&gt;, 1468406 &lt;int&gt;, 1473158 &lt;int&gt;, 1473291 &lt;int&gt;, 1475574 &lt;int&gt;,
-## #   1475683 &lt;int&gt;, 1477627 &lt;int&gt;, 1481615 &lt;int&gt;</code></pre>
+## 6 ARDILLA jabón    unrelated         1         1         1         1         1</code></pre>
 <p>Entonces tengo una columna por participante y una fila por palabra en cada condición. Ya no es más <em>tidy data</em>.</p>
 <p>Pero si, en cambio, parto de data que no es <em>tidy</em> y quiero que lo sea, podemos usar <code>pivot_longer()</code>. Nuevamente aclaro que los nombres de las columnas los ponga en una columna llamada <code>id</code> y los valores de las columnas los ponga en una columna llamada <code>Acc</code>. En este caso, agrego el argumento <code>cols</code> para que este intercambio lo haga con todas las columnas menos con las columnas de <code>target</code>, <code>prime</code> y <code>relation</code> (es decir, solo con las columnas que son nombres de participantes):</p>
 <pre class="r"><code>data_long &lt;- data_wide %&gt;% 
   pivot_longer(cols = c(-target, -prime, -relation), names_to = &quot;id&quot;, values_to = &quot;Acc&quot;)</code></pre>
 </div>
-<div id="espero-que-te-haya-servido" class="section level1">
-<h1>¡Espero que te haya servido!</h1>
+<div id="espero-que-te-haya-servido" class="section level2">
+<h2>¡Espero que te haya servido!</h2>
 </div>
 
 
