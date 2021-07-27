@@ -7,9 +7,9 @@ date: "26/06/2020"
 ---
 
 -----------
-### Breve introducción a la base de datos 
+### Breve introducción a la base de datos utilizada
 
-El experimento utilizado como ejemplo es una tarea de aprendizaje de palabras.  
+El experimento que vamos a usar como ejemplo es una tarea de aprendizaje de palabras.  
 
 Luego de que los participantes aprendieran 20 palabras poco frecuentes en español, se realizó una tarea de decisión semántica (o priming) para evaluar el aprendizaje. En ella, aparecía una palabra ('*prime*') seguida de otra ('*target*') que podía estar o no semánticamente relacionada al *prime*. Los participantes debían decidir lo más rápido posible si estas dos palabras estaban relacionadas o no, presionando una tecla. El *target* podía ser una palabra familiar (conocida) o una de las 20 palabras nuevas. 
 

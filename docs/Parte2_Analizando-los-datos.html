@@ -266,9 +266,9 @@ $(document).ready(function () {
 
 
 <hr />
-<div id="criterio-de-inclusión-por-accuracy" class="section level2">
-<h2><strong>Criterio de inclusión por accuracy</strong></h2>
-<p>Si vamos un poquito más allá del filtrado incial de la base datos, es probable que en algún momento necesites aplicar otros filtros utilizando criterios propios, es decir, aplicar algún criterio de inclusión. En esta tarea, voy a tomar como criterio de inclusión un buen desempeño en las palabras familiares. De lo contrario, considero que el participante podría no estar prestando atención.</p>
+<div id="criterios-de-inclusión" class="section level2">
+<h2><strong>Criterios de inclusión</strong></h2>
+<p>Si vamos un poquito más allá del filtrado incial de la base datos, es probable que en algún momento necesites aplicar otros filtros utilizando criterios propios, es decir, aplicar algún criterio de inclusión. En esta tarea, voy a tomar como criterio de inclusión un buen desempeño en las palabras familiares.</p>
 <p>Primero, voy a crear una base de datos que contenga a todos los participantes que quiero excluir, partiendo de la base de datos que creamos en la Parte 1 (<code>data_raw</code>). Para eso, voy a encadenar varias funciones.</p>
 <pre class="r"><code>data_exclude &lt;- data_raw %&gt;%
   filter(familiarity == &quot;familiar&quot;) %&gt;% 
