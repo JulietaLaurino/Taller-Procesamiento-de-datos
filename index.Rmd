@@ -7,10 +7,22 @@ date: "26/06/2020"
 ---
 
 -----------
-#
-#
-### El paquete **_tidyverse_**
+### Breve introducción a la base de datos 
 
+El experimento utilizado como ejemplo es una tarea de aprendizaje de palabras.  
+
+Luego de que los participantes aprendieran 20 palabras poco frecuentes en español, se realizó una tarea de decisión semántica (o priming) para evaluar el aprendizaje. En ella, aparecía una palabra ('*prime*') seguida de otra ('*target*') que podía estar o no semánticamente relacionada al *prime*. Los participantes debían decidir lo más rápido posible si estas dos palabras estaban relacionadas o no, presionando una tecla. El *target* podía ser una palabra familiar (conocida) o una de las 20 palabras nuevas. 
+
+Además, se realizó un grupo reactivado, el cual tenía una sesión de reactivación previo al priming, y un grupo no reactivado (sin sesión de reactivación). 
+
+Las variables y sus niveles son: 
+
+* **grupo**: reactivado / no reactivado
+* **relación**: relacionada / no relacionada
+* **familiaridad**: familiar / nueva
+
+
+### El paquete **_tidyverse_**
 
 _Tidyverse_ no es un único paquete sino que es un conjunto de paquetes que tienen como función ordenar y procesar datos de manera ordenada (de ahí el nombre del paquete _**tidy**verse_). Cuando usemos _Tidyverse_, entonces, vamos a trabajar con datos ordenados. 
 

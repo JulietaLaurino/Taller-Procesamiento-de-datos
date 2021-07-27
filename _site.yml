@@ -1,7 +1,7 @@
 name: "my-website"
 output_dir: "docs"
 navbar:
-  title: "Mini-taller"
+  title: "Inicio"
   left:
     - text: "Parte 1"
       href: Parte1_Limpiando-los-datos.html

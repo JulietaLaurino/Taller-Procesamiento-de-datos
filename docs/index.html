@@ -14,7 +14,7 @@
 
 <title>Procesamiento de datos con tidyverse en R</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -239,7 +239,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Mini-taller</a>
+      <a class="navbar-brand" href="index.html">Inicio</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -270,11 +270,18 @@ $(document).ready(function () {
 
 
 <hr />
-<div id="section" class="section level1">
-<h1></h1>
+<div id="breve-introducción-a-la-base-de-datos" class="section level3">
+<h3>Breve introducción a la base de datos</h3>
+<p>El experimento utilizado como ejemplo es una tarea de aprendizaje de palabras.</p>
+<p>Luego de que los participantes aprendieran 20 palabras poco frecuentes en español, se realizó una tarea de decisión semántica (o priming) para evaluar el aprendizaje. En ella, aparecía una palabra (‘<em>prime</em>’) seguida de otra (‘<em>target</em>’) que podía estar o no semánticamente relacionada al <em>prime</em>. Los participantes debían decidir lo más rápido posible si estas dos palabras estaban relacionadas o no, presionando una tecla. El <em>target</em> podía ser una palabra familiar (conocida) o una de las 20 palabras nuevas.</p>
+<p>Además, se realizó un grupo reactivado, el cual tenía una sesión de reactivación previo al priming, y un grupo no reactivado (sin sesión de reactivación).</p>
+<p>Las variables y sus niveles son:</p>
+<ul>
+<li><strong>grupo</strong>: reactivado / no reactivado</li>
+<li><strong>relación</strong>: relacionada / no relacionada</li>
+<li><strong>familiaridad</strong>: familiar / nueva</li>
+</ul>
 </div>
-<div id="section-1" class="section level1">
-<h1></h1>
 <div id="el-paquete-tidyverse" class="section level3">
 <h3>El paquete <strong><em>tidyverse</em></strong></h3>
 <p><em>Tidyverse</em> no es un único paquete sino que es un conjunto de paquetes que tienen como función ordenar y procesar datos de manera ordenada (de ahí el nombre del paquete <em><strong>tidy</strong>verse</em>). Cuando usemos <em>Tidyverse</em>, entonces, vamos a trabajar con datos ordenados.</p>
@@ -286,7 +293,6 @@ $(document).ready(function () {
 <li>Cada dataset a usar dentro de un mismo análisis está en su propia tabla.</li>
 </ul>
 <p><img src="images/tidy-1.svg" /></p>
-</div>
 </div>
 
 

@@ -13,7 +13,7 @@
 
 <title>Parte 1: Limpiando los datos</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -270,16 +270,18 @@ $(document).ready(function () {
 <h2><strong>Paso 1: Leo y almaceno la base de datos</strong></h2>
 <div id="descargar-desde-gorilla" class="section level4">
 <h4><strong>Descargar desde Gorilla</strong></h4>
-<p>Te recomiendo que descargues los archivos de gorilla en formato csv. Si son muchos datos el formato excel va a tardar y hasta puede tirar error. Para saber a qué tarea corresponde cada archivo tenés que tener en cuenta que cada uno está identificado por el código del experimento, la versión del mismo y el código de la tarea (alfanumérico de 4 caracteres). Como voy a analizar el priming, me fijo este código alfanumérico en la pantalla de diseño del experimento, como muestro acá abajo:</p>
+<p>Te recomiendo que descargues los archivos de gorilla en formato csv. Si son muchos datos el formato excel va a tardar y hasta puede tirar error. Para saber a qué tarea corresponde cada archivo tenés que tener en cuenta que cada uno está identificado por el código del experimento, la versión del mismo y el código de la tarea (alfanumérico de 4 caracteres). Como voy a analizar la tarea de priming, me fijo este código alfanumérico en la pantalla de diseño del experimento, como muestro acá abajo:</p>
 <p><img src="images/Archivos_gorilla.png" width="800" /></p>
 </div>
 <div id="ahora-sí-leo-y-almaceno" class="section level4">
 <h4><strong>Ahora sí, leo y almaceno</strong></h4>
-<p>Por suerte Gorilla me da los datos ordenados (repasemos, cada columna es una variable y cada observación una fila) ¡Un paso menos! En la Parte 2 voy a explicar cómo deberíamos hacer para transformar nuestros datos en <em>tidy data</em> si no lo fueran. Dado que hice dos versiones del experimento (versión 14 y 15) tengo dos bases de datos diferentes. Usando <code>read.csv()</code> voy a leerlas. Además las voy a almacenar eligiendo un nombre para cada una y usando el operador de asignación <code>&lt;-</code></p>
+<p>Por suerte Gorilla me da los datos ordenados (repasemos, cada columna es una variable y cada observación una fila). En la Parte 2 voy a explicar cómo deberíamos hacer para transformar nuestros datos en <em>tidy data</em> si no lo fueran.<br />
+Dado que hice dos versiones del experimento (versión 14 y 15) tengo dos bases de datos diferentes. Usando <code>read.csv()</code> voy a leerlas. Además las voy a almacenar eligiendo un nombre para cada una y usando el operador de asignación <code>&lt;-</code></p>
+<pre class="r"><code>install.packages(&#39;tidyverse&#39;)</code></pre>
 <pre class="r"><code>library(tidyverse)
 data_v14 &lt;- read.csv(&quot;data/data_exp_11854-v14_task-5ksx.csv&quot;)
 data_v15 &lt;- read.csv(&quot;data/data_exp_11854-v15_task-5ksx.csv&quot;)</code></pre>
-<p>Aclaración: si bien ya instalamos los paquetes y no es necesario instalarlos cada vez que iniciamos R, <strong>sí</strong> tenemos que cargarlos en nuestra libreria si los usamos. Es por eso que cada vez que abramos este script vamos a tener que correr la línea <code>library(tidiverse)</code>.</p>
+<p>Aclaración: si bien ya instalamos el paquete ‘tidyverse’ y no es necesario instalarlo cada vez que iniciamos R, <strong>sí</strong> tenemos que cargarlo en nuestra libreria si los usamos. Es por eso que cada vez que abramos este script vamos a tener que correr la línea <code>library(tidiverse)</code>.</p>
 </div>
 </div>
 <div id="paso-2-unir-bases-de-datos" class="section level2">
@@ -291,7 +293,13 @@ data_v15 &lt;- read.csv(&quot;data/data_exp_11854-v15_task-5ksx.csv&quot;)</code
 <div id="paso-3-renombro-columas" class="section level2">
 <h2><strong>Paso 3: Renombro columas</strong></h2>
 <p>Los nombres de algunas de las variables (columnas) vienen predeterminados por Gorilla y no son muy intuitivos. Es por eso que me resulta cómodo cambiarlos y así poder identificar los datos de mejor forma. Esto lo podemos hacer de utilizando <code>rename()</code> y asignando un nuevo nombre (que escribo primero y entre comillas) a cada una de las columnas a renombrar.</p>
-<pre class="r"><code>data_raw &lt;- rename(data_raw,&quot;id&quot; = Participant.Public.ID, &quot;group&quot; = randomiser.qg34, &quot;RT&quot; = Reaction.Time, &quot;Acc&quot; = Correct, &quot;relation&quot; = primeType, &quot;familiarity&quot; = trialType, &quot;block&quot; =    block_testingSR) </code></pre>
+<pre class="r"><code>data_raw &lt;- rename(data_raw,
+                   &quot;id&quot; = Participant.Public.ID, 
+                   &quot;group&quot; = randomiser.qg34, 
+                   &quot;RT&quot; = Reaction.Time, 
+                   &quot;Acc&quot; = Correct, 
+                   &quot;relation&quot; = primeType, 
+                   &quot;familiarity&quot; = trialType) </code></pre>
 <p>Fiajate que lo primero que escribo es el nombre de la base de datos que contiene estas columnas y después todo lo que corresponde particularmente a esta función. Esto lo vamos a hacer para todas las funciones que usemos.</p>
 </div>
 <div id="paso-4-filtro-filas" class="section level2">
@@ -302,46 +310,51 @@ data_v15 &lt;- read.csv(&quot;data/data_exp_11854-v15_task-5ksx.csv&quot;)</code
 <p>Buscando en nuestra base de datos podemos ver que las variables <code>display</code> y <code>Screen.Name</code> son aquellas que debería filtrar. Me quiero quedar sólo con las filas en las que la variable <code>display</code> sea <code>Tarea</code> para no analizar los datos que corresponden al demo inicial. Además me quiero quedar sólo con aquellas filas en las que la variable <code>Screen.Name</code> sea <code>target</code>, como vemos acá abajo.</p>
 <p><img src="images/Filter_gorilla.png" width="800" /></p>
 <p>Para esto uso la función <code>filter()</code>, la cual extrae (y se queda con) las filas que cumplen con un criterio lógico, el cual vamos a especificar.</p>
-<pre class="r"><code>data_raw &lt;- filter (data_raw, Screen.Name == &quot;target&quot;, display == &quot;Tarea&quot;) </code></pre>
+<pre class="r"><code>data_raw &lt;- filter(data_raw,
+                   Screen.Name == &quot;target&quot;, display == &quot;Tarea&quot;) </code></pre>
 <p>Fijate que todo esto se indica con el operador relacional <code>==</code> el cual chequea si cada elemento del primer vector es igual al segundo (no confundir con el operador <code>=</code> que se usa para asignar). Hay otros criterios lógicos que podemos usar para filtrar datos, como <code>&gt;</code>, <code>&lt;</code>, <code>!</code>, entre otros.</p>
 </div>
 <div id="paso-5-selecciono-columnas" class="section level2">
 <h2><strong>Paso 5: Selecciono columnas</strong></h2>
 <p>Otro paso importante para descartar información que no me interesa analizar es la selección de columnas. Para esto podemos usar <code>select()</code> y especificar con cuáles queremos quedarnos. También podríamos aclarar con qué columnas <strong>no</strong> queremos quedarnos (es decir, cuáles queremos que se vayan) agregando un <code>-</code> antes de cada nombre.</p>
-<pre class="r"><code>data_raw &lt;- select (data_raw, id, group, relation, familiarity, block, prime, target, Response, Acc, RT) </code></pre>
+<pre class="r"><code>data_raw &lt;- select(data_raw,
+                   id, group, relation, familiarity, prime, target, Acc, RT) </code></pre>
 </div>
 <div id="bonus-track-i-ordeno-filas" class="section level2">
 <h2><strong>Bonus track I: Ordeno filas</strong></h2>
 <p>Si bien no es un paso esencial para el análisis de datos, a mí me gusta y ayuda a la visualización. Por eso agregué este primer bonus track en donde vamos a ordenar las filas usando <code>arrange()</code> y aclarando la columna que quiero ordenar. Por default va a ordenarlas de menor a mayor o en orden alfabético. Si escribimos más de una columna se van a ir sumando los niveles de ordenamiento.</p>
-<pre class="r"><code>data_raw &lt;- arrange (data_raw, group, id, familiarity, block, target)</code></pre>
+<pre class="r"><code>data_raw &lt;- arrange(data_raw,
+                    group, id, familiarity, target)</code></pre>
 </div>
 <div id="bonus-track-ii-nuevas-columnas" class="section level2">
 <h2><strong>Bonus track II: Nuevas columnas</strong></h2>
 <p>Otro paso muchas veces útil es generar una nueva columna. Esta nueva columna podría resultar de una operación tomando como input una o más columnas existentes, o simplemente tener un valor determinado. En cualquiera de los casos, vamos a utilizar la función <code>mutate()</code>. En el ejemplo que doy acá abajo, quiero generar una nueva columna denominada “accRT” que incluya sólo los RTs en los que la respuesta fue correcta. Sin entrar en detalles, esto lo puedo hacer utilizando <code>ifelse</code> que va a ir fila por fila evaluando lo que le indico. Acá estoy indicando: “si el valor de la columna <code>Acc</code> es <code>1</code>, entonces el valor que toma la nueva columna <code>accRT</code> es el mismo que el de la columna <code>RT</code>. De lo contrario, el valor que toma es <code>NA</code>”.</p>
-<pre class="r"><code>data_raw &lt;- mutate(data_raw, accRT = ifelse(Acc == 1, RT, NA))
-slice(data_raw, 1:10)</code></pre>
-<pre><code>##         id         group  relation familiarity block    prime   target
-## 1  1394643 No reactivado   related    familiar     1   nueces  ARDILLA
-## 2  1394643 No reactivado unrelated    familiar     1    clavo  ARDILLA
-## 3  1394643 No reactivado unrelated    familiar     1    golpe   BAÑERA
-## 4  1394643 No reactivado   related    familiar     1    ducha   BAÑERA
-## 5  1394643 No reactivado unrelated    familiar     1    telón  CABALLO
-## 6  1394643 No reactivado   related    familiar     1   jinete  CABALLO
-## 7  1394643 No reactivado   related    familiar     1  verdura CALABAZA
-## 8  1394643 No reactivado unrelated    familiar     1 pantalón CALABAZA
-## 9  1394643 No reactivado   related    familiar     1 descanso  COLCHÓN
-## 10 1394643 No reactivado unrelated    familiar     1   galera  COLCHÓN
-##     Response Acc       RT    accRT
-## 1    related   1 1298.385 1298.385
-## 2  unrelated   1 1826.270 1826.270
-## 3  unrelated   1 1568.765 1568.765
-## 4    related   1  800.530  800.530
-## 5  unrelated   1  770.925  770.925
-## 6    related   1  878.025  878.025
-## 7    related   1  873.040  873.040
-## 8  unrelated   1 1229.445 1229.445
-## 9    related   1 1244.985 1244.985
-## 10 unrelated   1  973.960  973.960</code></pre>
+<pre class="r"><code>data_raw &lt;- mutate(data_raw, 
+                   accRT = ifelse(Acc == 1, RT, NA))
+
+tail(data_raw, n = 10) #Muestra las últimas 10 filas </code></pre>
+<pre><code>##            id group  relation familiarity    prime  target Acc       RT
+## 16791 1481615 react   related         new    plato  TINELO   1  962.840
+## 16792 1481615 react unrelated         new  tornado  TINELO   1  766.140
+## 16793 1481615 react   related         new  tenedor  TINELO   1  888.275
+## 16794 1481615 react unrelated         new   violín  TINELO   1 1320.240
+## 16795 1481615 react unrelated         new  tumulto ZORCICO   0 1071.655
+## 16796 1481615 react   related         new    canto ZORCICO   0 1283.520
+## 16797 1481615 react   related         new    danza ZORCICO   1 1104.970
+## 16798 1481615 react unrelated         new   lluvia ZORCICO   1 1911.205
+## 16799 1481615 react unrelated         new    tallo ZORCICO   1  629.695
+## 16800 1481615 react   related         new flamenco ZORCICO   0 1303.865
+##          accRT
+## 16791  962.840
+## 16792  766.140
+## 16793  888.275
+## 16794 1320.240
+## 16795       NA
+## 16796       NA
+## 16797 1104.970
+## 16798 1911.205
+## 16799  629.695
+## 16800       NA</code></pre>
 </div>
 <div id="resumen-y-conclusión" class="section level2">
 <h2><strong>Resumen y conclusión</strong></h2>
@@ -349,11 +362,16 @@ slice(data_raw, 1:10)</code></pre>
 <h3><strong>Todo junto!</strong></h3>
 <p>Podemos hacer todos los pasos anteriores es un único y gran paso usando la pipa (o pipe) <code>%&gt;%</code>. Lo que estamos indicando cada vez que la usamos es que el argumento que se encuentra a la derecha de la pipa se alimente del que se encuentra a la izquierda. Este operador es muy útil para correr una secuencia de operaciones como muestro a continuación:</p>
 <pre class="r"><code>data_raw &lt;- bind_rows(data_v14, data_v15) %&gt;% 
-  rename(&quot;id&quot; = Participant.Public.ID, &quot;group&quot; = randomiser.qg34, &quot;RT&quot; = Reaction.Time, &quot;Acc&quot; = Correct, &quot;relation&quot; = primeType, &quot;familiarity&quot; = trialType, &quot;block&quot; =   block_testingSR) %&gt;% 
-  filter (Screen.Name == &quot;target&quot;, display == &quot;Tarea&quot;) %&gt;% 
-  select (id, group, relation, familiarity, block, prime, target, Response, Acc, RT) %&gt;% 
-  arrange (group, id, familiarity, block, target) %&gt;% 
-  mutate (accRT = ifelse(Acc == 1, RT, NA))</code></pre>
+  rename(&quot;id&quot; = Participant.Public.ID, 
+         &quot;group&quot; = randomiser.qg34, 
+         &quot;RT&quot; = Reaction.Time, 
+         &quot;Acc&quot; = Correct, 
+         &quot;relation&quot; = primeType, 
+         &quot;familiarity&quot; = trialType) %&gt;% 
+  filter(Screen.Name == &quot;target&quot;, display == &quot;Tarea&quot;) %&gt;% 
+  select(id, group, relation, familiarity, prime, target, Acc, RT) %&gt;% 
+  arrange(group, id, familiarity, target) %&gt;% 
+  mutate(accRT = ifelse(Acc == 1, RT, NA))</code></pre>
 </div>
 <div id="chequeo" class="section level3">
 <h3><strong>Chequeo</strong></h3>
@@ -361,9 +379,10 @@ slice(data_raw, 1:10)</code></pre>
 <pre class="r"><code>trials_count &lt;- data_raw %&gt;% 
   group_by(id) %&gt;% 
   count()
-slice(trials_count, 1:10)</code></pre>
-<pre><code>## # A tibble: 70 x 2
-## # Groups:   id [70]
+
+head(trials_count, n = 10) #Muestra las primeras 10 filas</code></pre>
+<pre><code>## # A tibble: 10 x 2
+## # Groups:   id [10]
 ##         id     n
 ##      &lt;int&gt; &lt;int&gt;
 ##  1 1394643   240
@@ -375,8 +394,7 @@ slice(trials_count, 1:10)</code></pre>
 ##  7 1395071   240
 ##  8 1395086   240
 ##  9 1395109   240
-## 10 1395211   240
-## # ... with 60 more rows</code></pre>
+## 10 1395211   240</code></pre>
 <p>Y ya tenemos nuestra tidy data super tidy :) Pero podemos seguir un poquito más…</p>
 </div>
 </div>
