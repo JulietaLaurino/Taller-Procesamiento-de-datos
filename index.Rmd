@@ -21,8 +21,8 @@ Las variables y sus niveles son:
 * **relación**: relacionada / no relacionada
 * **familiaridad**: familiar / nueva
 
-Podés descargarte los datos para seguir el tutorial en el siguiente link:
-[datos](https://github.com/JulietaLaurino/gorilla-data-processing-with-R/tree/master/data)
+Podés descargarte los datos y scripts para seguir el tutorial en estos links:
+[datos](https://github.com/JulietaLaurino/gorilla-data-processing-with-R/tree/master/data), [script Parte 1](https://github.com/JulietaLaurino/gorilla-data-processing-with-R/blob/master/Parte1_Limpiando-los-datos.Rmd), [script Parte 2](https://github.com/JulietaLaurino/gorilla-data-processing-with-R/blob/master/Parte2_Analizando-los-datos.Rmd). 
 
 ### El paquete **_tidyverse_**
 

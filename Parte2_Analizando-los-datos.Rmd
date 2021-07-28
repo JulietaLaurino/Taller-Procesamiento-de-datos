@@ -35,7 +35,7 @@ data_exclude <- data_raw %>%
   summarise(meanAcc = mean(Acc)) %>% 
   filter(meanAcc < 0.9)
 
-head(data_exclude)
+data_exclude
 ```
 
 Fijate que la única función nueva que usamos es `summarise()` para que me muestre el promedio de la `Acc` de los datos que agrupé con `group_by`. Esta tabla va a contener, entonces, a aquellos participantes que presenten un promedio menor a 0.9 en las palabras familiares.
@@ -65,7 +65,7 @@ data_condition <- data %>%
             meanRT = mean(RT, na.rm = TRUE),
             sd_RT = sd(RT))
 
-head(data_condition)
+data_condition
 ```
 
 ## **Guardado**

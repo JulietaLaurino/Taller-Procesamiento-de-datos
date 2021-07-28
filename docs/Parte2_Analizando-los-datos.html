@@ -276,7 +276,7 @@ $(document).ready(function () {
   summarise(meanAcc = mean(Acc)) %&gt;% 
   filter(meanAcc &lt; 0.9)
 
-head(data_exclude)</code></pre>
+data_exclude</code></pre>
 <pre><code>## # A tibble: 4 x 3
 ## # Groups:   id [4]
 ##        id group    meanAcc
@@ -302,9 +302,9 @@ head(data_exclude)</code></pre>
             meanRT = mean(RT, na.rm = TRUE),
             sd_RT = sd(RT))
 
-head(data_condition)</code></pre>
-<pre><code>## # A tibble: 6 x 6
-## # Groups:   group, relation [3]
+data_condition</code></pre>
+<pre><code>## # A tibble: 8 x 6
+## # Groups:   group, relation [4]
 ##   group    relation  familiarity meanAcc meanRT sd_RT
 ##   &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
 ## 1 no_react related   familiar      0.928   850.  323.
@@ -312,7 +312,9 @@ head(data_condition)</code></pre>
 ## 3 no_react unrelated familiar      0.957   895.  332.
 ## 4 no_react unrelated new           0.853  1142.  402.
 ## 5 react    related   familiar      0.925   843.  274.
-## 6 react    related   new           0.731  1045.  370.</code></pre>
+## 6 react    related   new           0.731  1045.  370.
+## 7 react    unrelated familiar      0.963   887.  293.
+## 8 react    unrelated new           0.856  1109.  375.</code></pre>
 </div>
 <div id="guardado" class="section level2">
 <h2><strong>Guardado</strong></h2>
